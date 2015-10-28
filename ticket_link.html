@@ -1,0 +1,101 @@
+<html>
+<head>
+</head>
+<body>
+  <script type="text/javascript">
+  var hostedButtonIds = [
+    'NO ZERO',
+    'J8H3KYCK9BECY', // 01 Student Shorts 1
+    'PMWWWYM573JTS', // 02 There Should Be Rules
+    '8GYMQQM329864', // 03 Canadian Music Movies
+    '58VSJBFX7M42A', // 04 Student Shorts 2
+    'V25KET2RBFVHQ', // 05 Cycling Documentaries
+    'BMSKLP2MJD6SQ', // 06 Documentary Shorts 1
+    '7KQV3M8MZVGTQ', // 07 Drama Shorts 1
+    'D5A7GT6QKVFXW', // 08 Dark Horse Candidate
+    'KBDEGKBMRVA3C', // 09 LGBTQ Shorts
+    'PS2E5L2FQRADL', // 10 7 Days In Syria
+    'YKRA3V5FSRTVS', // 11 Experimental Shorts
+    'J6XTPVMZ3WVKW', // 12 Short Film Mix (Digital Canaries)
+    'BPYD7XDW2HF52', // 13 Comedy Shorts
+    '4GAN75BRCHQYS', // 14 Project M
+    'MTQTDEPY32EWA', // 15 FALL
+    'FXLW6ARD5C8AG', // 16 Horror Shorts
+    'DRS87V43HM446', // 17 Mid-Length Drama Shorts
+    'EDZAS3HF8SR8J', // 18 2 for 1 Afternoon Films
+    'FZWAM3VSEAEKQ', // 19 The Bad Mother
+    'N2QH2ZBU28VPJ', // 20 Michelle Latimer
+    'BNSBA86U3RXB6', // 21 Real Miyagi
+    'EM5MG25VTCXPQ', // 22 Drama Shorts 3
+    'RRVZ2YZDP8J3W', // 23 Animated Shorts
+    'DRN2G4RUD3GPU', // 24 Incredible Jojo
+    'WK39RGGB32AU6', // 25 The Push
+    'SP2F4L6UN575Y', // 26 Film Club Films
+    '2ML7LFMPSEGRQ', // 27 Awards Ceremony
+    '7BB6LV4BZJLVA', // 28 If It's Not Something
+    'EMWPNEVBLQ66U', // 29 Gala
+    'http://www.thehamiltondialogues.ca/', // 30 After The Last River
+    'http://www.hamiltonfilmexpo.com', // 31 Hamilton Film Expo
+    '3M98WWBNBQEJQ', // SFX Day
+  ];
+  function getRequests() {
+    var s1 = location.search.substring(1, location.search.length).split('&'),
+      r = {}, s2, i;
+    for (i = 0; i < s1.length; i += 1) {
+      s2 = s1[i].split('=');
+      r[decodeURIComponent(s2[0]).toLowerCase()] = decodeURIComponent(s2[1]);
+    }
+    return r;
+  };
+  function post(path, params, method) {
+    method = method || "post"; // Set method to post by default if not specified.
+
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+      if(params.hasOwnProperty(key)) {
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", key);
+        hiddenField.setAttribute("value", params[key]);
+        form.appendChild(hiddenField);
+      }
+    }
+    document.body.appendChild(form);
+    form.submit();
+  }
+  function performLogic() {
+    // If we already have a form on the page, user clicked back, go back more.
+    var forms = document.getElementsByTagName('form');
+    if(forms.size > 0) {
+      history.go(-1);
+      return;
+    }
+    var index = Number(getRequests().film_id);
+    if(index && hostedButtonIds[index]) {
+      var link = hostedButtonIds[index];
+      if(link.indexOf('http') != -1) {
+        // Use it as a URL
+        post(link, {}, 'get');
+      }
+      else {
+        // Use it as a hosted button ID at PayPal.
+        post('https://www.paypal.com/cgi-bin/webscr', {
+          cmd: '_s-xclick',
+          hosted_button_id: link
+        });
+      }
+    }
+    else {
+      alert('No ticket link available');
+      history.go(-1);
+    }
+  }
+  performLogic(); // Now do it!
+  </script>
+</body>
+</html>
